@@ -9,4 +9,5 @@ app = Flask(__name__, instance_relative_config=True)
 from app import views
 
 # Load the config file
-app.config.from_object('config')
+from config import Config
+app.config.from_object(Config)
