@@ -1,4 +1,4 @@
-import StringIO
+import io
 import urllib
 from PIL import Image
 import base64
@@ -24,11 +24,11 @@ def index():
         }
     ]
 
-    file = urllib.urlopen('https://api.helioviewer.org/v2/getJP2Image/?date=2014-01-01T23:59:59Z&sourceId=14').read()
+    file = urllib.request.urlopen('https://api.helioviewer.org/v2/getJP2Image/?date=2014-01-01T23:59:59Z&sourceId=14').read()
     img = Image.open(file)
     rgb_im = img.convert('RGB')
     rgb_im.save('colors.png')
-    output = StringIO.StringIO()
+    output = io.StringIO()
     im = Image.open(rgb_im)  # Your image here!
     im.save(output, format='PNG')
     output.seek(0)
