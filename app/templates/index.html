@@ -4,5 +4,6 @@
     {% for post in posts %}
     <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
     {% endfor %}
-<img src="data:image/png;{{img}},{0}"/>
+<!-- <img src="data:image/png;{{img}},{0}"/> -->
+<p>{{img}}</p>
 {% endblock %}

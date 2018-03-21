@@ -1,7 +1,9 @@
-import io
+from StringIO import StringIO
 import urllib
-from PIL import Image
+from pgmagick import Image, Blob
 import base64
+import requests
+import glymur
 
 from flask import render_template, flash, redirect, url_for
 
@@ -24,17 +26,22 @@ def index():
         }
     ]
 
-    file = urllib.request.urlopen('https://api.helioviewer.org/v2/getJP2Image/?date=2014-01-01T23:59:59Z&sourceId=14').read()
-    img = Image.open(file)
-    rgb_im = img.convert('RGB')
-    rgb_im.save('colors.png')
-    output = io.StringIO()
-    im = Image.open(rgb_im)  # Your image here!
-    im.save(output, format='PNG')
-    output.seek(0)
-    output_s = output.read()
-    b64 = base64.b64encode(output_s)
-    return render_template('index.html', title='Home', user=user, posts=posts, img=b64)
+    response = requests.get('https://api.helioviewer.org/v2/getJP2Image/?date=2014-01-01T23:59:59Z&sourceId=14')
+    img = Image.open(StringIO(response.content))
+    #file = StringIO(urllib.urlopen('https://api.helioviewer.org/v2/getJP2Image/?date=2014-01-01T23:59:59Z&sourceId=14').read())
+    #print(file)
+    jp2 = glymur.Jp2k(img)
+    #img = Image(file)
+    #img.write('CB_TM432.jpeg')
+    #rgb_im = img.convert('RGB')
+    #rgb_im.save('colors.png')
+    # output = StringIO.StringIO()
+    # im = Image.open(rgb_im)  # Your image here!
+    # im.save(output, format='PNG')
+    # output.seek(0)
+    # output_s = output.read()
+    # b64 = base64.b64encode(output_s)
+    return render_template('index.html', title='Home', user=user, posts=posts, img=jp2)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
