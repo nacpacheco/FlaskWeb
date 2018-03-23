@@ -32,7 +32,7 @@ def index():
     img = Image.open(file)
     #img.write('CB_TM432.jpeg')
     rgb_im = img.convert('RGB')
-    rgb_im.save('colors.png')
+    rgb_im.save('app/static/colors.png',optimize=True,quality=20)
     # output = StringIO.StringIO()
     # im = Image.open(rgb_im)  # Your image here!
     # im.save(output, format='PNG')
