@@ -27,18 +27,9 @@ def index():
     ]
 
     file = StringIO(urllib.urlopen('https://api.helioviewer.org/v2/getJP2Image/?date=2014-01-01T23:59:59Z&sourceId=14').read())
-    #print(file)
-    #jp2 = glymur.Jp2k(img)
     img = Image.open(file)
-    #img.write('CB_TM432.jpeg')
     rgb_im = img.convert('RGB')
     rgb_im.save('app/static/colors.png',optimize=True,quality=20)
-    # output = StringIO.StringIO()
-    # im = Image.open(rgb_im)  # Your image here!
-    # im.save(output, format='PNG')
-    # output.seek(0)
-    # output_s = output.read()
-    # b64 = base64.b64encode(output_s)
     return render_template('index.html', title='Home', user=user, posts=posts)
 
 @app.route('/login', methods=['GET', 'POST'])
