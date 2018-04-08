@@ -1,8 +1,5 @@
 from StringIO import StringIO
 import urllib
-import base64
-import requests
-import glymur
 from PIL import Image
 
 from flask import render_template, flash, redirect, url_for
@@ -26,11 +23,13 @@ def index():
         }
     ]
 
-    file = StringIO(urllib.urlopen('https://api.helioviewer.org/v2/getJP2Image/?date=2014-01-01T23:59:59Z&sourceId=14').read())
+    file = StringIO(urllib.urlopen('https://api.helioviewer.org/v2/getJP2Image/?date=2014-01-01T23:59:59Z&sourceId=14')
+                    .read())
     img = Image.open(file)
     rgb_im = img.convert('RGB')
     rgb_im.save('app/static/colors.png',optimize=True,quality=20)
     return render_template('index.html', title='Home', user=user, posts=posts)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
