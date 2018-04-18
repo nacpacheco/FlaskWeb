@@ -10,7 +10,7 @@ from app import app
 @app.route('/')
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    # file = StringIO(urllib.urlopen('https://api.helioviewer.org/v2/getJP2Image/?date=2014-01-01T23:59:59Z&sourceId=14')
+     file = StringIO(urllib.urlopen('https://api.helioviewer.org/v2/getJP2Image/?date=2014-01-01T23:59:59Z&sourceId=14')
     #                 .read())
     # img = Image.open(file)
     # rgb_im = img.convert('RGB')

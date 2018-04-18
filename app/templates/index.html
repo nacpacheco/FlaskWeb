@@ -1,31 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
-
-
-
-
-<a href="#" onClick="createPanel();">Click here to open panel</a>
-
+<a href="#" id="clickme">Click here to open panel</a>
 
 {% endblock %}
 {% block scripts %}
  {{super()}}
-    <script>
-        function createPanel(){
-        jsPanel.create({
-            theme:       'primary',
-            headerTitle: 'my panel #1',
-            position:    'center-top 0 58',
-            contentSize: '450 420',
-            content:     '<img src="{{url_for('static', filename='colors.png')}}" style="width: inherit; padding-bottom: 6px;"><div class="input-group date" id="datetimepicker1"><input type="text" class="form-control" /><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span></div>',
-            callback: function () {
-                this.content.style.padding = '20px';
-            },
-            onbeforeclose: function () {
-                return confirm('Do you really want to close the panel?');
-            }
-            });
-        }
-    </script>
 {% endblock %}
