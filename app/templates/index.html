@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<button id="clickme" class="btn btn-default">
+<button id="clickme" class="btn btn-default" style="margin: 50px;">
      <img src="./static/AIA.png" width="20" margin=50"/> AIA Images
 </button>
+<div id="loader"></div>
 {% endblock %}
 {% block scripts %}
  {{super()}}
