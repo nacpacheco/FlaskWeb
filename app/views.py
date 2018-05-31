@@ -9,11 +9,12 @@ import sunpy.map
 import sunpy.data.sample
 import astropy.units as u
 from datetime import datetime, timedelta
+from PIL import Image
 
 
 from app import app
 
-image_path = '';
+image_path = ''
 @app.route('/')
 @app.route('/index', methods=['GET', 'POST'])
 def index():
@@ -31,10 +32,30 @@ def AIA():
     lyra_map.peek(basic_plot=True)
     plt.savefig('app/static/'+filename+'_image.png')
     image_path = 'static/'+filename+'_image.png'
+    #img = Image.open('static/'+filename+'_image.png')
+    #img = img.crop(())
     return '<img id="img" src="'+image_path+'" style="width: inherit; padding-bottom: 6px;"><div class="input-group date' \
                                             '" id="datetimepicker"><input type="text" class="form-control" />' \
                                             '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar">' \
                                             '</span></span></div><button id="plot_info" class="btn btn-default" ' \
+                                            'onClick="plot_info()" style="width: 77px; margin-top: 10px;">Plot Info</button>'
+
+@app.route('/EIT/', methods=['POST'])
+def EIT():
+    enddate = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    startdate = (datetime.now() - timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
+    result = Fido.search(a.Time('2012/3/4', '2012/3/6'), a.Instrument('eit'),
+                         a.vso.Wavelength(171*u.angstrom))
+    downloaded_files = Fido.fetch(result[0, 0], path='app/static/fits/{file}.fits')
+    lyra_map = sunpy.map.Map(downloaded_files)
+    filename = (os.path.basename(downloaded_files[0]))
+    lyra_map.peek(basic_plot=True)
+    plt.savefig('app/static/'+filename+'_image.png')
+    image_path = 'static/'+filename+'_image.png'
+    #img = Image.open('static/'+filename+'_image.png')
+    #img = img.crop(())
+    return '<img id="img" src="'+image_path+'" style="width: inherit; padding-bottom: 6px;"><button id="plot_info" class' \
+                                            '="btn btn-default" ' \
                                             'onClick="plot_info()" style="width: 77px; margin-top: 10px;">Plot Info</button>'
 
 @app.route('/plot_info/', methods=['POST'])
