@@ -1,59 +1,74 @@
 $(document).ready(function(){
-$('#datetimepicker').datetimepicker();
-//                $('#datetimepicker').on("dp.hide", function(e){
-//                alert("Date has changed to " + (e.date).toDate());
-//                });
+$('#startDatePicker').datetimepicker({
+  onShow:function( ct ){
+   this.setOptions({
+    theme: 'dark'
+   })
+  },
+ });
+
+$('#endDatePicker').datetimepicker({
+    onShow:function( ct ){
+        this.setOptions({
+            theme: 'dark'
+         })
+    },
+    });
+});
 
 $('#clickmeAIA').click(function(e){
         e.preventDefault();
         $('#info').css('display', '');
+    });
+
+$('#plotAIA').click(function(e) {
+   e.preventDefault();
+   $.getJSON($SCRIPT_ROOT + '/AIA', {
+        a: $('#startDatePicker').val(),
+        b: $('#endDatePicker').val(),
+        c: $('#inputGroupSelect01').val()
+      }, function(data) {
+          console.log(data.result);
+          jsPanel.create({
+            theme:       'rgb(0,0,0) filled',
+            headerTitle: 'AIA Image',
+            position:    'center-top 0 58',
+            contentSize: '373 406',
+            content: data.result,
+            callback: function () {
+                this.content.style.padding = '20px';
+            }
+          });
+    });
+});
+
+//$('#clickmeEIT').click(function(e){
+//        e.preventDefault();
 //        jsPanel.create({
 //            theme:       'rgb(0,0,0) filled',
 //            headerTitle: 'Panel',
 //            position:    'center-top 0 58',
 //            contentSize: '373 406',
 //            contentAjax: {
-//                    url: 'http://127.0.0.1:5000/AIA/',
+//                    url: 'http://127.0.0.1:5000/EIT/',
 //					method: 'POST',
 //		     beforeSend: function () { $('#loader').html('<img src="./static/cat-loader.gif"/>');},
 //			 done:   function (panel) {
 //                panel.content.innerHTML = this.responseText;
 //                $('#loader').html('');
+//                $('#datetimepicker').datetimepicker();
+//                $('#datetimepicker').on("dp.hide", function(e){
+//                alert("Date has changed to " + (e.date).toDate());
+//                $("#img").attr("src","static/dino.png");
+//            });
 //            },
 //            },
 //             callback: function () {
 //                this.content.style.padding = '20px';
 //            }
 //            });
-    });
-
-$('#clickmeEIT').click(function(e){
-        e.preventDefault();
-        jsPanel.create({
-            theme:       'rgb(0,0,0) filled',
-            headerTitle: 'Panel',
-            position:    'center-top 0 58',
-            contentSize: '373 406',
-            contentAjax: {
-                    url: 'http://127.0.0.1:5000/EIT/',
-					method: 'POST',
-		     beforeSend: function () { $('#loader').html('<img src="./static/cat-loader.gif"/>');},
-			 done:   function (panel) {
-                panel.content.innerHTML = this.responseText;
-                $('#loader').html('');
-                $('#datetimepicker').datetimepicker();
-                $('#datetimepicker').on("dp.hide", function(e){
-                alert("Date has changed to " + (e.date).toDate());
-                $("#img").attr("src","static/dino.png");
-            });
-            },
-            },
-             callback: function () {
-                this.content.style.padding = '20px';
-            }
-            });
-    });
-});
+//    });
+//});
 
 function plot_info(){
     jsPanel.create({

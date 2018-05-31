@@ -1,21 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
-<button id="clickmeAIA" class="btn btn-default" style="margin: 50px;">
+<button id="clickmeAIA" class="btn btn-dark" style="margin: 50px;">
      <img src="./static/AIA.png" width="20" margin=50"/> AIA Images
 </button>
 <div class="row" id="info" style="display: none;margin: 35px;">
-    <div class='col-sm-3'>
+    <div class='col-sm-6'>
         <h4>Insert search informations:</h4>
-        <div class="input-group date" id="datetimepicker"><input type="text" class="form-control" />
-            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span></div>
-       <div class="dropdown" style="padding-top: 10px;">
-          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
-          <span class="caret"></span></button>
-          <ul class="dropdown-menu">
-            <li><a href="#">HTML</a></li>
-            <li><a href="#">CSS</a></li>
-            <li><a href="#">JavaScript</a></li>
-          </ul>
+        <label>Start date: </label>
+            <input id="startDatePicker" type="text" theme="dark">
+        <label>End date: </label>
+            <input id="endDatePicker" type="text" theme="dark">
+        <label style="display: table-row;">Measurements: </label>
+          <select class="custom-select" id="inputGroupSelect01" style="width: 65px;">
+            <option selected>Choose...</option>
+            <option value="94">94</option>
+            <option value="131">131</option>
+            <option value="171">171</option>
+            <option value="193">193</option>
+            <option value="211">211</option>
+            <option value="304">304</option>
+            <option value="335">335</option>
+            <option value="1600">1600</option>
+            <option value="1700">1700</option>
+            <option value="4500">4500</option>
+          </select>
+        <button id="plotAIA" class="btn btn-dark">Plot</button>
+        </div>
         </div>
     </div>
 </div>

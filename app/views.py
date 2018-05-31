@@ -1,6 +1,6 @@
 import matplotlib
 matplotlib.use('Agg')
-from flask import render_template
+from flask import render_template, request, jsonify
 from sunpy.net import Fido, attrs as a
 import matplotlib.pyplot as plt
 import glob
@@ -20,25 +20,25 @@ image_path = ''
 def index():
     return render_template('index.html', img='')
 
-@app.route('/AIA/', methods=['POST'])
+@app.route('/AIA/', methods=['GET','POST'])
 def AIA():
-    enddate = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    startdate = (datetime.now() - timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-    result = Fido.search(a.Time(startdate,enddate,enddate), a.Instrument('aia'),
-                         a.vso.Wavelength(304*u.AA))
+    startDate = request.args.get('a', 0, type=str)
+    endDate = request.args.get('b', 0, type=str)
+    wave = request.args.get('c', 0, type=int)
+    print(wave)
+    result = Fido.search(a.Time(startDate, endDate, endDate), a.Instrument('aia'),
+                         a.vso.Wavelength(wave*u.angstrom))
     downloaded_files = Fido.fetch(result[0, 0], path='app/static/fits/{file}.fits')
     lyra_map = sunpy.map.Map(downloaded_files)
     filename = (os.path.basename(downloaded_files[0]))
     lyra_map.peek(basic_plot=True)
     plt.savefig('app/static/'+filename+'_image.png')
     image_path = 'static/'+filename+'_image.png'
-    #img = Image.open('static/'+filename+'_image.png')
-    #img = img.crop(())
-    return '<img id="img" src="'+image_path+'" style="width: inherit; padding-bottom: 6px;"><div class="input-group date' \
-                                            '" id="datetimepicker"><input type="text" class="form-control" />' \
-                                            '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar">' \
-                                            '</span></span></div><button id="plot_info" class="btn btn-default" ' \
-                                            'onClick="plot_info()" style="width: 77px; margin-top: 10px;">Plot Info</button>'
+    # img = Image.open('static/'+filename+'_image.png')
+    # img = img.crop(())
+    return jsonify(result='<img id="img" src="'+image_path+'" style="width: inherit; padding-bottom: 6px;"><button id="plot_info" ' \
+                                            'class="btn btn-default" onClick="plot_info()" ' \
+                                            'style="width: 77px; margin-top: 10px;">Plot Info</button>')
 
 @app.route('/EIT/', methods=['POST'])
 def EIT():
