@@ -29,17 +29,41 @@ $('#plotAIA').click(function(e) {
         c: $('#inputGroupSelect01').val()
       }, function(data) {
           console.log(data.result);
-          jsPanel.create({
-            theme:       'rgb(0,0,0) filled',
-            headerTitle: 'AIA Image',
-            position:    'center-top 0 58',
-            contentSize: '373 406',
-            content: data.result,
-            callback: function () {
-                this.content.style.padding = '20px';
-            }
-          });
-    });
+          if($('#AIA-info').prop('checked')) {
+               $.getJSON($SCRIPT_ROOT + '/plot_info', {
+                a: data.result
+              }, function(data) {
+              console.log(data.result);
+                   jsPanel.create({
+                    theme:       'default',
+                    headerTitle: 'AIA Info',
+                    position:    'center-top 0 20',
+                    contentSize: '540 427',
+                    content: data.result,
+                    callback: function () {
+                        this.content.style.padding = '20px';
+                    }
+                  });
+                });
+           }
+           if($('#AIA-image').prop('checked')) {
+               $.getJSON($SCRIPT_ROOT + '/plot_image', {
+                a: data.result
+              }, function(data) {
+              console.log(data.result);
+                   jsPanel.create({
+                    theme:       'rgb(0,0,0) filled',
+                    headerTitle: 'AIA Image',
+                    position:    'center-top 0 58',
+                    contentSize: '373 406',
+                    content: data.result,
+                    callback: function () {
+                        this.content.style.padding = '20px';
+                    }
+                  });
+                });
+           }
+       });
 });
 
 //$('#clickmeEIT').click(function(e){
@@ -70,22 +94,22 @@ $('#plotAIA').click(function(e) {
 //    });
 //});
 
-function plot_info(){
-    jsPanel.create({
-            theme:       'default',
-            headerTitle: 'Plot info',
-            position:    'center-top 0 58',
-            contentSize: '540 427',
-            contentAjax: {
-            url: 'http://127.0.0.1:5000/plot_info/',
-            method: 'POST',
-            done: function(panel) {
-             panel.content.innerHTML = this.responseText;
-                },
-            },
-            callback: function () {
-                this.content.style.padding = '20px';
-            }
-    });
-};
+//function plot_info(){
+//    jsPanel.create({
+//            theme:       'default',
+//            headerTitle: 'Plot info',
+//            position:    'center-top 0 58',
+//            contentSize: '540 427',
+//            contentAjax: {
+//            url: 'http://127.0.0.1:5000/plot_info/',
+//            method: 'POST',
+//            done: function(panel) {
+//             panel.content.innerHTML = this.responseText;
+//                },
+//            },
+//            callback: function () {
+//                this.content.style.padding = '20px';
+//            }
+//    });
+//};
 
