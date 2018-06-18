@@ -12,10 +12,9 @@
             <input id="endDatePicker" type="text" theme="dark">
         <label style="display: table-row;">Measurements: </label>
           <select class="custom-select" id="inputGroupSelect01" style="width: 65px;">
-            <option selected>Choose...</option>
             <option value="94">94</option>
             <option value="131">131</option>
-            <option value="171">171</option>
+            <option value="171" selected>171</option>
             <option value="193">193</option>
             <option value="211">211</option>
             <option value="304">304</option>
@@ -24,10 +23,12 @@
             <option value="1700">1700</option>
             <option value="4500">4500</option>
           </select>
-          <input type="checkbox" aria-label="AIA-info" id="AIA-info">
+          <input type="checkbox" aria-label="AIA-info" id="AIA-info" checked="checked">
             <label>Info</label>
           <input type="checkbox" aria-label="AIA-image" id="AIA-image">
             <label>Image</label>
+          <!--<input type="checkbox" aria-label="AIA-lightcurve" id="AIA-lightcurve">-->
+            <!--<label>LightCurve</label>-->
         <button id="plotAIA" class="btn btn-dark">Plot</button>
     </div>
 </div>

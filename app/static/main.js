@@ -28,12 +28,10 @@ $('#plotAIA').click(function(e) {
         b: $('#endDatePicker').val(),
         c: $('#inputGroupSelect01').val()
       }, function(data) {
-          console.log(data.result);
           if($('#AIA-info').prop('checked')) {
                $.getJSON($SCRIPT_ROOT + '/plot_info', {
                 a: data.result
               }, function(data) {
-              console.log(data.result);
                    jsPanel.create({
                     theme:       'default',
                     headerTitle: 'AIA Info',
@@ -50,10 +48,26 @@ $('#plotAIA').click(function(e) {
                $.getJSON($SCRIPT_ROOT + '/plot_image', {
                 a: data.result
               }, function(data) {
-              console.log(data.result);
                    jsPanel.create({
                     theme:       'rgb(0,0,0) filled',
                     headerTitle: 'AIA Image',
+                    position:    'center-top 0 58',
+                    contentSize: '373 406',
+                    content: data.result,
+                    callback: function () {
+                        this.content.style.padding = '20px';
+                    }
+                  });
+                });
+           }
+           if($('#AIA-lightcurve').prop('checked')) {
+               $.getJSON($SCRIPT_ROOT + '/plot_lightcurve', {
+                a: data.result
+              }, function(data) {
+              console.log(data.result);
+                   jsPanel.create({
+                    theme:       'default',
+                    headerTitle: 'AIA LightCurve',
                     position:    'center-top 0 58',
                     contentSize: '373 406',
                     content: data.result,

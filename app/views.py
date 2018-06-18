@@ -2,6 +2,7 @@ import matplotlib
 matplotlib.use('Agg')
 from flask import render_template, request, jsonify
 from sunpy.net import Fido, attrs as a
+import sunpy.timeseries as ts
 import matplotlib.pyplot as plt
 import glob
 import os
@@ -29,50 +30,18 @@ def AIA():
     result = Fido.search(a.Time(startDate, endDate, endDate), a.Instrument('aia'),
                          a.vso.Wavelength(wave*u.angstrom))
     downloaded_files = Fido.fetch(result[0, 0], path='app/static/fits/{file}.fits')
-    # lyra_map = sunpy.map.Map(downloaded_files)
     filename = (os.path.basename(downloaded_files[0]))
-    # lyra_map.peek(basic_plot=True)
-    # plt.savefig('app/static/'+filename+'_image.png')
-    # image_path = 'static/'+filename+'_image.png'
-    # img = Image.open('static/'+filename+'_image.png')
-    # img = img.crop(())
-    # return jsonify(result='<img id="img" src="'+image_path+'" style="width: inherit; padding-bottom: 6px;"><button id="plot_info" ' \
-    #                                         'class="btn btn-default" onClick="plot_info()" ' \
-    #                                         'style="width: 77px; margin-top: 10px;">Plot Info</button>')
     return jsonify(result=filename)
 
-@app.route('/EIT/', methods=['POST'])
-def EIT():
-    enddate = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    startdate = (datetime.now() - timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-    result = Fido.search(a.Time('2012/3/4', '2012/3/6'), a.Instrument('eit'),
-                         a.vso.Wavelength(171*u.angstrom))
-    downloaded_files = Fido.fetch(result[0, 0], path='app/static/fits/{file}.fits')
-    # lyra_map = sunpy.map.Map(downloaded_files)
-    # filename = (os.path.basename(downloaded_files[0]))
-    # lyra_map.peek(basic_plot=True)
-    # plt.savefig('app/static/'+filename+'_image.png')
-    # image_path = 'static/'+filename+'_image.png'
-    #img = Image.open('static/'+filename+'_image.png')
-    #img = img.crop(())
-    return '<img id="img" src="'+image_path+'" style="width: inherit; padding-bottom: 6px;"><button id="plot_info" class' \
-                                            '="btn btn-default" ' \
-                                            'onClick="plot_info()" style="width: 77px; margin-top: 10px;">Plot Info</button>'
 
 @app.route('/plot_info/', methods=['GET', 'POST'])
 def plot_info():
-    # list_of_files = glob.glob('app/static/fits/*')
-    # latest_file = max(list_of_files, key=os.path.getctime)
-    # lyra_map = sunpy.map.Map(latest_file)
-    # filename = (os.path.basename(latest_file))
-    # lyra_map.peek()
-    # plt.savefig('app/static/'+filename+'_info.png')
     latest_file = 'app/static/fits/' + request.args.get('a', 0, type=str)
     lyra_map = sunpy.map.Map(latest_file)
     filename = (os.path.basename(latest_file))
     lyra_map.peek()
-    plt.savefig('app/static/image'+filename+'_info.png')
-    return jsonify(result='<img id="img" src="static/'+filename+'_info.png" style="width: inherit; padding-bottom: 6px;">')
+    plt.savefig('app/static/images/'+filename+'_info.png')
+    return jsonify(result='<img id="img" src="static/images/'+filename+'_info.png" style="width: inherit; padding-bottom: 6px;">')
 
 @app.route('/plot_image/', methods=['GET', 'POST'])
 def plot_image():
@@ -80,8 +49,18 @@ def plot_image():
     lyra_map = sunpy.map.Map(latest_file)
     filename = (os.path.basename(latest_file))
     lyra_map.peek(basic_plot=True)
-    plt.savefig('app/static/image' + filename + '_image.png')
-    return jsonify(result='<img id="img" src="static/'+filename+'_image.png" style="width: inherit; padding-bottom: 6px;">')
+    plt.savefig('app/static/images/' + filename + '_image.png')
+    return jsonify(result='<img id="img" src="static/images/'+filename+'_image.png" style="width: inherit; padding-bottom: 6px;">')
+
+@app.route('/plot_lightcurve/', methods=['GET', 'POST'])
+def plot_lightcurve():
+    latest_file = 'app/static/fits/' + request.args.get('a', 0, type=str)
+    print("light_curve")
+    light_curve = ts.TimeSeries(latest_file, source='AIA')
+    filename = (os.path.basename(latest_file))
+    light_curve.peek()
+    plt.savefig('app/static/images/' + filename + '_lightcurve.png')
+    return jsonify(result='<img id="img" src="static/images/'+filename+'_lightcurve.png" style="width: inherit; padding-bottom: 6px;">')
 
 
 
