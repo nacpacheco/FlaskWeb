@@ -23,10 +23,11 @@ def index():
 
 @app.route('/AIA/', methods=['GET','POST'])
 def AIA():
-    startDate = request.args.get('a', 0, type=str)
-    endDate = request.args.get('b', 0, type=str)
+    endDate = request.args.get('a', 0, type=str)
+    endDate = datetime.strptime(endDate, "%Y/%m/%d %H:%M")
+    startDate = endDate - timedelta(minutes=30)
     wave = request.args.get('c', 0, type=int)
-    print(wave)
+    print(startDate)
     result = Fido.search(a.Time(startDate, endDate, endDate), a.Instrument('aia'),
                          a.vso.Wavelength(wave*u.angstrom))
     downloaded_files = Fido.fetch(result[0, 0], path='app/static/fits/{file}.fits')

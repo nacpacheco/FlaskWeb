@@ -1,5 +1,5 @@
 $(document).ready(function(){
-$('#startDatePicker').datetimepicker({
+$('#AIADatePicker').datetimepicker({
   onShow:function( ct ){
    this.setOptions({
     theme: 'dark'
@@ -13,19 +13,28 @@ $('#endDatePicker').datetimepicker({
             theme: 'dark'
          })
     },
-    });
+  });
+
+$('#startDatePicker').datetimepicker({
+    onShow:function( ct ){
+        this.setOptions({
+            theme: 'dark'
+        })
+    },
+});
 });
 
-$('#clickmeAIA').click(function(e){
-        e.preventDefault();
-        $('#info').css('display', '');
-    });
+
+//
+//$('#clickmeAIA').click(function(e){
+//        e.preventDefault();
+//        $('#info').css('display', '');
+//    });
 
 $('#plotAIA').click(function(e) {
    e.preventDefault();
    $.getJSON($SCRIPT_ROOT + '/AIA', {
-        a: $('#startDatePicker').val(),
-        b: $('#endDatePicker').val(),
+        a: $('#AIADatePicker').val(),
         c: $('#inputGroupSelect01').val()
       }, function(data) {
           if($('#AIA-info').prop('checked')) {
