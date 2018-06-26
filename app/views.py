@@ -4,13 +4,11 @@ from flask import render_template, request, jsonify
 from sunpy.net import Fido, attrs as a
 import sunpy.timeseries as ts
 import matplotlib.pyplot as plt
-import glob
 import os
 import sunpy.map
 import sunpy.data.sample
 import astropy.units as u
 from datetime import datetime, timedelta
-from PIL import Image
 
 
 from app import app
@@ -34,6 +32,17 @@ def AIA():
     filename = (os.path.basename(downloaded_files[0]))
     return jsonify(result=filename)
 
+@app.route('/AIATimeSeries', methods=['GET','POST'])
+def AIATimeSeries():
+    startDate = request.args.get('a', 0, type=str)
+    endDate = request.args.get('b', 0, type=str)
+    result = Fido.search(a.Time(startDate, endDate), a.Instrument('XRS'))
+    downloaded_files = Fido.fetch(result)
+    combined_goes_ts = ts.TimeSeries(downloaded_files, source='XRS', concatenate=True)
+    combined_goes_ts.peek()
+    filename = (os.path.basename(downloaded_files[0]))
+    plt.savefig('app/static/images/' + filename + '_timeseries.png')
+    return jsonify(result='<img id="img" src="static/images/'+filename+'_timeseries.png" style="width: inherit; padding-bottom: 6px;">')
 
 @app.route('/plot_info/', methods=['GET', 'POST'])
 def plot_info():
@@ -53,15 +62,6 @@ def plot_image():
     plt.savefig('app/static/images/' + filename + '_image.png')
     return jsonify(result='<img id="img" src="static/images/'+filename+'_image.png" style="width: inherit; padding-bottom: 6px;">')
 
-@app.route('/plot_lightcurve/', methods=['GET', 'POST'])
-def plot_lightcurve():
-    latest_file = 'app/static/fits/' + request.args.get('a', 0, type=str)
-    print("light_curve")
-    light_curve = ts.TimeSeries(latest_file, source='AIA')
-    filename = (os.path.basename(latest_file))
-    light_curve.peek()
-    plt.savefig('app/static/images/' + filename + '_lightcurve.png')
-    return jsonify(result='<img id="img" src="static/images/'+filename+'_lightcurve.png" style="width: inherit; padding-bottom: 6px;">')
 
 
 
