@@ -4,10 +4,11 @@ from flask import render_template, request, jsonify
 from sunpy.net import Fido, attrs as a
 import sunpy.timeseries as ts
 import matplotlib.pyplot as plt
-import os
 import sunpy.map
 import sunpy.data.sample
 import astropy.units as u
+import os
+import zipfile
 from datetime import datetime, timedelta
 
 
@@ -41,8 +42,16 @@ def AIATimeSeries():
     combined_goes_ts = ts.TimeSeries(downloaded_files, source='XRS', concatenate=True)
     combined_goes_ts.peek()
     filename = (os.path.basename(downloaded_files[0]))
+    zipf = zipfile.ZipFile('app/static/TSFits/'+filename+'.zip', 'w', zipfile.ZIP_DEFLATED)
+    for files in downloaded_files:
+        zipf.write(files, os.path.basename(files))
+    zipf.close()
     plt.savefig('app/static/images/' + filename + '_timeseries.png')
-    return jsonify(result='<img id="img" src="static/images/'+filename+'_timeseries.png" style="width: inherit; padding-bottom: 6px;">')
+    return jsonify(result='<img id="img" src="static/images/'+filename+'_timeseries.png" style="width: inherit; padding-bottom: 6px;">',
+        download='<a href="static/images/'+filename+'_timeseries.png" download="" id="btn-down" '
+        'class="glyphicon glyphicon-floppy-save" style="font-size: 20px; color: black; text-decoration: none;"></a>'
+        '<a href="static/TSFits/'+filename+'.zip" download="" id="btn-down" class="glyphicon '
+        'glyphicon glyphicon-save-file" style="font-size: 20px; color: black; text-decoration: none;"></a>')
 
 @app.route('/plot_info/', methods=['GET', 'POST'])
 def plot_info():
@@ -51,7 +60,8 @@ def plot_info():
     filename = (os.path.basename(latest_file))
     lyra_map.peek()
     plt.savefig('app/static/images/'+filename+'_info.png')
-    return jsonify(result='<img id="img" src="static/images/'+filename+'_info.png" style="width: inherit; padding-bottom: 6px;">')
+    return jsonify(result='<img id="img" src="static/images/'+filename+'_info.png" style="width: inherit; padding-bottom: 6px;">',
+                   download='<a href="static/images/'+filename+'_info.png" download="" id="btn-down" class="glyphicon glyphicon-floppy-save" style="font-size: 20px; color: black; text-decoration: none;"></a>')
 
 @app.route('/plot_image/', methods=['GET', 'POST'])
 def plot_image():
@@ -60,7 +70,9 @@ def plot_image():
     filename = (os.path.basename(latest_file))
     lyra_map.peek(basic_plot=True)
     plt.savefig('app/static/images/' + filename + '_image.png')
-    return jsonify(result='<img id="img" src="static/images/'+filename+'_image.png" style="width: inherit; padding-bottom: 6px;">')
+    return jsonify(result='<img id="img" src="static/images/'+filename+'_image.png" style="width: inherit; padding-bottom: 6px;">',
+        download='<a href="static/images/'+filename+'_image.png" download="" id="btn-down" class="glyphicon '
+        'glyphicon-floppy-save" style="font-size: 20px; color: white; text-decoration: none;"></a>')
 
 
 

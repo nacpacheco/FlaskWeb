@@ -1,3 +1,4 @@
 #Ignore downloaded data
 app/static/images/
 app/static/fits/
+app/static/TSFits/

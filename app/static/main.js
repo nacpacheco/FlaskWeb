@@ -25,6 +25,7 @@ $('#startDatePicker').datetimepicker({
 });
 
 $('#plotAIA').click(function(e) {
+   $.LoadingOverlay("show");
    e.preventDefault();
    $.getJSON($SCRIPT_ROOT + '/AIA', {
         a: $('#AIADatePicker').val(),
@@ -36,7 +37,8 @@ $('#plotAIA').click(function(e) {
               }, function(data) {
                    jsPanel.create({
                     theme:       'default',
-                    headerTitle: 'AIA Info',
+                    headerTitle: 'AIA Info from ' + $('#AIADatePicker').val(),
+                    headerToolbar: data.download,
                     position:    'center-top 0 20',
                     contentSize: '540 427',
                     content: data.result,
@@ -44,6 +46,7 @@ $('#plotAIA').click(function(e) {
                         this.content.style.padding = '20px';
                     }
                   });
+                      $.LoadingOverlay("hide");
                 });
            }
            if($('#AIA-image').prop('checked')) {
@@ -52,20 +55,23 @@ $('#plotAIA').click(function(e) {
               }, function(data) {
                    jsPanel.create({
                     theme:       'rgb(0,0,0) filled',
-                    headerTitle: 'AIA Image',
+                    headerTitle: 'AIA Image from '+ $('#AIADatePicker').val(),
+                    headerToolbar: data.download,
                     position:    'center-top 0 58',
-                    contentSize: '373 406',
+                    contentSize: '475 430',
                     content: data.result,
-                    callback: function () {
+                    callback: function (panel) {
                         this.content.style.padding = '20px';
                     }
                   });
+                   $.LoadingOverlay("hide");
                 });
            }
        });
 });
 
 $('#plotTimeSeries').click(function(e){
+       $.LoadingOverlay("show");
        e.preventDefault();
         $.getJSON($SCRIPT_ROOT + '/AIATimeSeries', {
             a: $('#startDatePicker').val(),
@@ -73,7 +79,8 @@ $('#plotTimeSeries').click(function(e){
               }, function(data) {
                    jsPanel.create({
                     theme:       'default',
-                    headerTitle: 'AIA Info',
+                    headerTitle: 'TimeSeries from '+ $('#startDatePicker').val(),
+                    headerToolbar: data.download,
                     position:    'center-top 0 20',
                     contentSize: '540 427',
                     content: data.result,
@@ -81,6 +88,7 @@ $('#plotTimeSeries').click(function(e){
                         this.content.style.padding = '20px';
                     }
                   });
+                  $.LoadingOverlay("hide");
                });
 });
 
