@@ -20,6 +20,10 @@ image_path = ''
 def index():
     return render_template('index.html', img='')
 
+@app.route('/about', methods=['GET', 'POST'])
+def about():
+    return render_template('about.html')
+
 @app.route('/AIA/', methods=['GET','POST'])
 def AIA():
     endDate = request.args.get('a', 0, type=str)
