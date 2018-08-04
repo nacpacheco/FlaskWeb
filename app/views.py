@@ -33,6 +33,7 @@ def AIA():
     print(startDate)
     result = Fido.search(a.Time(startDate, endDate, endDate), a.Instrument('aia'),
                          a.vso.Wavelength(wave*u.angstrom))
+    print(result)
     downloaded_files = Fido.fetch(result[0, 0], path='app/static/fits/{file}.fits')
     filename = (os.path.basename(downloaded_files[0]))
     return jsonify(result=filename)
@@ -53,9 +54,11 @@ def AIATimeSeries():
     plt.savefig('app/static/images/' + filename + '_timeseries.png')
     return jsonify(result='<img id="img" src="static/images/'+filename+'_timeseries.png" style="width: inherit; padding-bottom: 6px;">',
         download='<a href="static/images/'+filename+'_timeseries.png" download="" id="btn-down" '
-        'class="glyphicon glyphicon-floppy-save" style="font-size: 20px; color: black; text-decoration: none;"></a>'
+        'class="glyphicon glyphicon-floppy-save" style="font-size: 20px; color: black; text-decoration: none; '
+                                        'data-toggle="tooltip" data-placement="top" title="Download PNG file""></a>'
         '<a href="static/TSFits/'+filename+'.zip" download="" id="btn-down" class="glyphicon '
-        'glyphicon glyphicon-save-file" style="font-size: 20px; color: black; text-decoration: none;"></a>')
+        'glyphicon glyphicon-save-file" style="font-size: 20px; color: black; text-decoration: none;'
+            'data-toggle="tooltip" data-placement="top" title="Download FITS file""></a>')
 
 @app.route('/plot_info/', methods=['GET', 'POST'])
 def plot_info():
@@ -65,7 +68,12 @@ def plot_info():
     lyra_map.peek()
     plt.savefig('app/static/images/'+filename+'_info.png')
     return jsonify(result='<img id="img" src="static/images/'+filename+'_info.png" style="width: inherit; padding-bottom: 6px;">',
-                   download='<a href="static/images/'+filename+'_info.png" download="" id="btn-down" class="glyphicon glyphicon-floppy-save" style="font-size: 20px; color: black; text-decoration: none;"></a>')
+                   download='<a href="static/images/'+filename+'_info.png" download="" id="btn-down" class="glyphicon glyphicon-floppy-save" '
+                    'style="font-size: 20px; color: black; text-decoration: none;" data-toggle="tooltip" '
+                        'data-placement="top" title="Download PNG file"></a><a href="static/fits/' + filename
+                            + '" download="" id="btn-down" class="glyphicon glyphicon glyphicon-save-file" '
+                            ' data-toggle="tooltip" data-placement="top" title="Download FITS file" '
+                              'style="font-size: 20px; color: black; text-decoration: none;"></a>')
 
 @app.route('/plot_image/', methods=['GET', 'POST'])
 def plot_image():
@@ -76,7 +84,11 @@ def plot_image():
     plt.savefig('app/static/images/' + filename + '_image.png')
     return jsonify(result='<img id="img" src="static/images/'+filename+'_image.png" style="width: inherit; padding-bottom: 6px;">',
         download='<a href="static/images/'+filename+'_image.png" download="" id="btn-down" class="glyphicon '
-        'glyphicon-floppy-save" style="font-size: 20px; color: white; text-decoration: none;"></a>')
+        'glyphicon-floppy-save" style="font-size: 20px; color: white; text-decoration: none;" data-toggle="tooltip" '
+                                                    'data-placement="top" title="Download PNG file"></a>'
+        '<a href="static/fits/' + filename + '" download="" id="btn-down" class="glyphicon glyphicon glyphicon-save-file" '
+        ' data-toggle="tooltip" data-placement="top" title="Download FITS file" style="font-size: 20px; color: white; '
+                                             'text-decoration: none;"></a>')
 
 
 

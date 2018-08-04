@@ -1,7 +1,13 @@
 $(document).ready(function(){
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+});
+
 $('#AIADatePicker').datetimepicker({
     maxDate:'+0',
-    minDate: '2010/05/20'
+    minDate: '2010/05/20',
+    theme:'dark'
  });
 
 $('#endDatePicker').datetimepicker({
@@ -10,8 +16,9 @@ $('#endDatePicker').datetimepicker({
         minDate:$('#startDatePicker').val()?$('#startDatePicker').val():false
        })
      },
-    maxDate: '+0',
-    minDate: $('#startDatePicker').val()
+    maxDate: '-1970/01/02',
+    minDate: $('#startDatePicker').val(),
+    theme:'dark'
   });
 
 $('#startDatePicker').datetimepicker({
@@ -21,7 +28,8 @@ $('#startDatePicker').datetimepicker({
     maxDate:$('#endDatePicker').val()?$('#endDatePicker').val():false
    })
   },
-     minDate: '2010/05/20'
+     minDate: '2010/05/20',
+     theme:'dark'
 });
 });
 
@@ -111,6 +119,8 @@ if( $('#startDatePicker').val() == "" || $('#endDatePicker').val() == ""){
                });
         }
 });
+
+
 
 
 
