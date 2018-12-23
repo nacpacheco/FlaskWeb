@@ -104,6 +104,8 @@ if( $('#startDatePicker').val() == "" || $('#endDatePicker').val() == ""){
             a: $('#startDatePicker').val(),
             b: $('#endDatePicker').val()
               }, function(data) {
+              $.LoadingOverlay("hide");
+                   if (data.result != "error") {
                    jsPanel.create({
                     theme:       'default',
                     headerTitle: 'TimeSeries from '+ $('#startDatePicker').val(),
@@ -115,9 +117,19 @@ if( $('#startDatePicker').val() == "" || $('#endDatePicker').val() == ""){
                         this.content.style.padding = '20px';
                     }
                   });
-                  $.LoadingOverlay("hide");
+                  } else {
+                        alert("Something went wrong! Please try again with another time period");
+                  }
                });
         }
+});
+
+$('#showTimeSeries').click(function(e){
+    $('#timeseriesoptions').toggle();
+});
+
+$('#clickmeAIA').click(function(e){
+    $('#showAIAoptions').toggle();
 });
 
 

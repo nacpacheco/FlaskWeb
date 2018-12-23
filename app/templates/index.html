@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-<button id="clickmeAIA" class="btn btn-dark" style="margin: 50px;" data-toggle="collapse" href="#collapseBody"
-        role="button" aria-expanded="false" aria-controls="collapseExample">
-     <img src="./static/AIA.png" width="20" margin=50"/> AIA Images
-</button>
-<div class="row" id="collapseBody" style="display: none;margin: 35px;">
-    <div class="card card-body">
+<div class="row">
     <div class='col-sm-6'>
+        <button id="clickmeAIA" class="btn btn-dark" style="margin: 50px;height: 40px;" data-toggle="collapse" href="#collapseBody"
+        role="button" aria-expanded="false" aria-controls="collapseExample">
+        <img src="./static/AIA.png" width="20" margin=50"/> AIA Images
+        </button>
+        <div class="card card-body" id="showAIAoptions" style="display:none; width: 240px; margin-left: 50px;">
         <h4>Insert search informations:</h4>
         <label>Date: </label>
             <input id="AIADatePicker" type="text" theme="dark">
-        <label style="display: table-row;">Measurements: </label>
+        <label style="display: table-row;">Wavelength: </label>
           <select class="custom-select" id="inputGroupSelect01" style="width: 65px;">
             <option value="94">94</option>
             <option value="131">131</option>
@@ -28,20 +28,22 @@
           <input type="checkbox" aria-label="AIA-image" id="AIA-image">
             <label>Image</label>
         <button id="plotAIA" class="btn btn-dark" style="margin-left: 5px;">Plot</button>
-        <button class="btn btn-dark" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-                aria-controls="collapseExample" style=" display: flex; margin-top: 5px; margin-bottom: 5px;">
-            TimeSeries Options
+        </div>
+    </div>
+        <div class='col-sm-6'>
+            <button class="btn btn-dark" id="showTimeSeries" style="margin: 50px;width: 125px;height: 40px;">
+        <img src="./static/raioxexemplo.png" width="20" margin=50px" data-toggle="collapse" href="#collapseBody"
+        role="button" aria-expanded="false" aria-controls="collapseExample"/>
+            GOES TimeSeries
         </button>
-        <div class="collapse" id="collapseExample" style="width: 190px;">
-          <div class="card card-body">
-           <label>Start date: </label>
+            <div class="card card-body" id="timeseriesoptions" style="display:none; width: 240px; margin-left: 50px;">
+                <h4>Insert search informations:</h4>
+        <label>Start date: </label>
             <input id="startDatePicker" type="text" theme="dark">
               <label>End date: </label>
             <input id="endDatePicker" type="text" theme="dark">
               <button class="btn btn-dark" style="width: 90px; margin-top: 5px;" id="plotTimeSeries">Get TimeSeries</button>
           </div>
-        </div>
-    </div>
     </div>
 </div>
 <div id="loader"></div>

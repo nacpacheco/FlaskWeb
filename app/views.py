@@ -10,6 +10,7 @@ import astropy.units as u
 import os
 import zipfile
 from datetime import datetime, timedelta
+from requests.exceptions import HTTPError
 
 
 from app import app
@@ -35,6 +36,7 @@ def AIA():
                          a.vso.Wavelength(wave*u.angstrom))
     print(result)
     downloaded_files = Fido.fetch(result[0, 0], path='app/static/fits/{file}.fits')
+    print(downloaded_files)
     filename = (os.path.basename(downloaded_files[0]))
     return jsonify(result=filename)
 
@@ -43,22 +45,27 @@ def AIATimeSeries():
     startDate = request.args.get('a', 0, type=str)
     endDate = request.args.get('b', 0, type=str)
     result = Fido.search(a.Time(startDate, endDate), a.Instrument('XRS'))
-    downloaded_files = Fido.fetch(result)
-    combined_goes_ts = ts.TimeSeries(downloaded_files, source='XRS', concatenate=True)
-    combined_goes_ts.peek()
-    filename = (os.path.basename(downloaded_files[0]))
-    zipf = zipfile.ZipFile('app/static/TSFits/'+filename+'.zip', 'w', zipfile.ZIP_DEFLATED)
-    for files in downloaded_files:
-        zipf.write(files, os.path.basename(files))
-    zipf.close()
-    plt.savefig('app/static/images/' + filename + '_timeseries.png')
-    return jsonify(result='<img id="img" src="static/images/'+filename+'_timeseries.png" style="width: inherit; padding-bottom: 6px;">',
-        download='<a href="static/images/'+filename+'_timeseries.png" download="" id="btn-down" '
-        'class="glyphicon glyphicon-floppy-save" style="font-size: 20px; color: black; text-decoration: none; '
+    try:
+        downloaded_files = Fido.fetch(result)
+        combined_goes_ts = ts.TimeSeries(downloaded_files, source='XRS', concatenate=True)
+        combined_goes_ts.peek()
+        filename = (os.path.basename(downloaded_files[0]))
+        zipf = zipfile.ZipFile('app/static/TSFits/'+filename+'.zip', 'w', zipfile.ZIP_DEFLATED)
+        for files in downloaded_files:
+            zipf.write(files, os.path.basename(files))
+        zipf.close()
+        plt.savefig('app/static/images/' + filename + '_timeseries.png')
+        return jsonify(result='<img id="img" src="static/images/'+filename+'_timeseries.png" style="width: inherit; padding-bottom: 6px;">',
+            download='<a href="static/images/'+filename+'_timeseries.png" download="" id="btn-down" '
+            'class="glyphicon glyphicon-floppy-save" style="font-size: 20px; color: black; text-decoration: none; '
                                         'data-toggle="tooltip" data-placement="top" title="Download PNG file""></a>'
-        '<a href="static/TSFits/'+filename+'.zip" download="" id="btn-down" class="glyphicon '
-        'glyphicon glyphicon-save-file" style="font-size: 20px; color: black; text-decoration: none;'
-            'data-toggle="tooltip" data-placement="top" title="Download FITS file""></a>')
+            '<a href="static/TSFits/'+filename+'.zip" download="" id="btn-down" class="glyphicon '
+            'glyphicon glyphicon-save-file" style="font-size: 20px; color: black; text-decoration: none;'
+                'data-toggle="tooltip" data-placement="top" title="Download FITS file""></a>')
+    except HTTPError:
+        import pdb; pdb.set_trace()
+        result = "error"
+        return jsonify(result=result)
 
 @app.route('/plot_info/', methods=['GET', 'POST'])
 def plot_info():
